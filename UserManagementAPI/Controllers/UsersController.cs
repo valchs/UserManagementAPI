@@ -51,6 +51,7 @@ namespace UserManagementAPI.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public IActionResult AddUser([FromBody] UserInput user)
         {
             try
@@ -65,7 +66,8 @@ namespace UserManagementAPI.Controllers
                 }
 
                 int id = data.SaveUser(user);
-                return Ok($"User {id}: saved!");
+                User newUser = data.GetUsers(id: id)[0];
+                return Created($"users/{id}", newUser);
             }
             catch (Exception ex)
             {
