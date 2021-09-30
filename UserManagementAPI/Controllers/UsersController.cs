@@ -26,7 +26,6 @@ namespace UserManagementAPI.Controllers
         {
             try
             {
-                //var data = new UserData(_config);
                 List<User> users = _db.GetUsers();
                 return Ok(users);
             }
@@ -44,7 +43,6 @@ namespace UserManagementAPI.Controllers
         {
             try
             {
-                //var data = new UserData(_config);
                 var user = _db.GetUsers(id: id);
 
                 if (user.Count == 0)
@@ -67,7 +65,6 @@ namespace UserManagementAPI.Controllers
         {
             try
             {
-                //var data = new UserData(_config);
                 var usr = _db.GetUsers(email: user.Email);
 
                 if (usr.Count != 0)
@@ -94,7 +91,6 @@ namespace UserManagementAPI.Controllers
         {
             try
             {
-                //var data = new UserData(_config);
                 var usr = _db.GetUsers(id: id);
 
                 if (usr.Count == 0)
@@ -119,7 +115,6 @@ namespace UserManagementAPI.Controllers
         {
             try
             {
-                //var data = new UserData(_config);
                 var usr = _db.GetUsers(id: id);
 
                 if (usr.Count == 0)
