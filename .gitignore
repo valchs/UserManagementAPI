@@ -447,3 +447,4 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 /UserManagementAPI/appsettings.json
+/UserManagementAPI/Properties/ServiceDependencies/UsrManagementApi - Web Deploy/profile.arm.json

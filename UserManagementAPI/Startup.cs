@@ -32,7 +32,7 @@ namespace UserManagementAPI
                 options.AddDefaultPolicy(
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:8080")
+                    builder.WithOrigins("https://usermanagement-c31c1.web.app")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
                 });
