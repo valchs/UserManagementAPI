@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UserManagementLibrary.DataAccess;
+using UserManagementLibrary.DataAccess.Internal;
 
 namespace UserManagementAPI
 {
@@ -37,6 +39,8 @@ namespace UserManagementAPI
             });
             services.AddControllers();
             services.AddSwaggerGen();
+            services.AddTransient<ISqlDataAccess, SqlDataAccess>();
+            services.AddTransient<IUserData, UserData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

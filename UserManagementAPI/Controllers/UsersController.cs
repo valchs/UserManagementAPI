@@ -12,11 +12,11 @@ namespace UserManagementAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IConfiguration _config;
+        private readonly IUserData _db;
 
-        public UsersController(IConfiguration config)
+        public UsersController(IUserData db)
         {
-            _config = config;
+            _db = db;
         }
 
         [HttpGet]
@@ -26,8 +26,8 @@ namespace UserManagementAPI.Controllers
         {
             try
             {
-                var data = new UserData(_config);
-                List<User> users = data.GetUsers();
+                //var data = new UserData(_config);
+                List<User> users = _db.GetUsers();
                 return Ok(users);
             }
             catch (Exception ex)
@@ -44,8 +44,8 @@ namespace UserManagementAPI.Controllers
         {
             try
             {
-                var data = new UserData(_config);
-                var user = data.GetUsers(id: id);
+                //var data = new UserData(_config);
+                var user = _db.GetUsers(id: id);
 
                 if (user.Count == 0)
                 {
@@ -67,8 +67,8 @@ namespace UserManagementAPI.Controllers
         {
             try
             {
-                var data = new UserData(_config);
-                var usr = data.GetUsers(email: user.Email);
+                //var data = new UserData(_config);
+                var usr = _db.GetUsers(email: user.Email);
 
                 if (usr.Count != 0)
                 {
@@ -76,8 +76,8 @@ namespace UserManagementAPI.Controllers
                     return BadRequest(ModelState);
                 }
 
-                int id = data.SaveUser(user);
-                User newUser = data.GetUsers(id: id)[0];
+                int id = _db.SaveUser(user);
+                User newUser = _db.GetUsers(id: id)[0];
                 return Created($"users/{id}", newUser);
             }
             catch (Exception ex)
@@ -94,15 +94,15 @@ namespace UserManagementAPI.Controllers
         {
             try
             {
-                var data = new UserData(_config);
-                var usr = data.GetUsers(id: id);
+                //var data = new UserData(_config);
+                var usr = _db.GetUsers(id: id);
 
                 if (usr.Count == 0)
                 {
                     return NotFound();
                 }
 
-                data.SaveUser(user, id);
+                _db.SaveUser(user, id);
                 return NoContent();
             }
             catch (Exception ex)
@@ -119,15 +119,15 @@ namespace UserManagementAPI.Controllers
         {
             try
             {
-                var data = new UserData(_config);
-                var usr = data.GetUsers(id: id);
+                //var data = new UserData(_config);
+                var usr = _db.GetUsers(id: id);
 
                 if (usr.Count == 0)
                 {
                     return NotFound();
                 }
 
-                data.DeleteUser(id);
+                _db.DeleteUser(id);
                 return NoContent();
             }
             catch (Exception ex)

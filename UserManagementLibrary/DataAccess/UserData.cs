@@ -9,26 +9,25 @@ using UserManagementLibrary.Models;
 
 namespace UserManagementLibrary.DataAccess
 {
-    public class UserData
+    public class UserData : IUserData
     {
-        private readonly IConfiguration _config;
-        public UserData(IConfiguration config)
+        private readonly ISqlDataAccess _db;
+        public UserData(ISqlDataAccess db)
         {
-            _config = config;
+            _db = db;
         }
 
+        public List<User> GetUsers() => GetUsers(0, null);
         public List<User> GetUsers(int id = 0, string email = null)
         {
-            SqlDataAccess sql = new SqlDataAccess(_config);
             var p = new DynamicParameters();
             p.Add("@nId", id);
             p.Add("@cEmail", email);
-            return sql.LoadData<User, dynamic>("dbo.get_Users", p, "UserConnection");
+            return _db.LoadData<User, dynamic>("dbo.get_Users", p, "UserConnection");
         }
 
         public int SaveUser(UserInput user, int? id = null)
         {
-            SqlDataAccess sql = new SqlDataAccess(_config);
             var p = new DynamicParameters();
             p.Add("@nId", id);
             p.Add("@cFirstName", user.FirstName);
@@ -36,17 +35,16 @@ namespace UserManagementLibrary.DataAccess
             p.Add("@cPhoneNumber", user.PhoneNumber);
             p.Add("@cEmail", user.Email);
             p.Add("@nUserId", 0, DbType.Int32, direction: ParameterDirection.Output);
-            sql.SaveData("dbo.set_Users", p, "UserConnection");
+            _db.SaveData("dbo.set_Users", p, "UserConnection");
             return p.Get<int>("nUserId");
         }
 
         public void DeleteUser(int id)
         {
-            SqlDataAccess sql = new SqlDataAccess(_config);
             var p = new DynamicParameters();
             p.Add("@nId", id);
             p.Add("@bDel", true);
-            sql.SaveData("dbo.set_Users", p, "UserConnection");
+            _db.SaveData("dbo.set_Users", p, "UserConnection");
         }
     }
 }
