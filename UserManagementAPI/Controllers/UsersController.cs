@@ -20,8 +20,9 @@ namespace UserManagementAPI.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<List<User>> GetUsers()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<User>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<List<User>> Get()
         {
             try
             {
@@ -36,13 +37,22 @@ namespace UserManagementAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<List<User>> GetUserById(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<User> GetById(int id)
         {
             try
             {
                 var data = new UserData(_config);
                 var user = data.GetUsers(id: id);
-                return Ok(user);
+
+                if (user.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(user[0]);
             }
             catch (Exception ex)
             {
@@ -52,7 +62,8 @@ namespace UserManagementAPI.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public IActionResult AddUser([FromBody] UserInput user)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Add([FromBody] UserInput user)
         {
             try
             {
@@ -76,13 +87,23 @@ namespace UserManagementAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult ChangeUser(int id, [FromBody] UserInput user)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Change(int id, [FromBody] UserInput user)
         {
             try
             {
                 var data = new UserData(_config);
-                int userId = data.SaveUser(user, id);
-                return Ok($"User {userId}: updated!");
+                var usr = data.GetUsers(id: id);
+
+                if (usr.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                data.SaveUser(user, id);
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -91,13 +112,23 @@ namespace UserManagementAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Delete(int id)
         {
             try
             {
                 var data = new UserData(_config);
+                var usr = data.GetUsers(id: id);
+
+                if (usr.Count == 0)
+                {
+                    return NotFound();
+                }
+
                 data.DeleteUser(id);
-                return Ok($"Item {id}: deleted!");
+                return NoContent();
             }
             catch (Exception ex)
             {
